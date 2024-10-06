@@ -68,10 +68,36 @@ We welcome contributions! If you would like to improve the package, feel free to
 
 This package is licensed under the MIT License. 
 
-## Acknowledgments 📚
+## References 📚
 
 Aho, K. A. (2013). _Foundational and applied statistics for biologists using R_. CRC Press.
 
 ## Acknowledgments 🙏
 
 Special thanks to all contributors, and to the R community for their continuous support and inspiration!
+
+
+### Key Sections Explained
+
+1. **Badges**: These add visual appeal and useful metadata, such as R version and license type.
+2. **Overview**: A concise description of the package.
+3. **Features**: Highlights the main features of the package.
+4. **Installation**: Clear instructions on how to install the package from GitHub.
+5. **Usage**: A quick, simple example to help users get started quickly.
+6. **How It Works**: Explains the logic behind the function to give users insight into its inner workings.
+7. **Contributing**: Encourages contributions and explains how users can contribute to the project.
+8. **License**: Specifies the license for the package.
+9. **Acknowledgments**: Gives credit to contributors and the community.
+
+### How to Add the `README.md` to GitHub
+
+1. **Navigate to your repository**: Go to the repository page on GitHub (e.g., `https://github.com/mali8308/statTestChooser`).
+2. **Create a new file**: Click on the "Add file" button and choose "Create new file".
+3. **Name the file**: Name it `README.md`.
+4. **Paste the content**: Paste the `README.md` code above into the editor.
+5. **Commit the file**: Add a commit message (e.g., "Add README") and click on "Commit new file".
+
+This will create the `README.md` file, and it will automatically be displayed on your GitHub repository's main page.
+
+Let me know if you need further customization or assistance!
+
