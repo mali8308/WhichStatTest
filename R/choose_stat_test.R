@@ -1,64 +1,55 @@
-#' Choose Statistical Test Based on Data Characteristics
+#' Choose and perform a statistical test based on data characteristics
 #'
-#' This function recommends an appropriate statistical test based on data characteristics such as normality, 
-#' variance equality, and whether the data is paired.
-#'
-#' @param data1 A numeric vector representing the first dataset.
-#' @param data2 A numeric vector representing the second dataset (optional).
-#' @param paired A boolean indicating whether the data is paired (default is FALSE).
-#' @param sigma_known A boolean indicating whether the population variance is known (default is FALSE).
-#' @return A string indicating the recommended statistical test.
+#' @param data1 A numeric vector of data points.
+#' @param data2 A numeric vector of data points (if applicable).
+#' @param paired A logical value indicating if the samples are paired (default: FALSE).
+#' @return A list containing the recommended test and its results.
+#' @examples
+#' data1 <- c(5.1, 5.8, 6.3, 4.9, 6.2)
+#' data2 <- c(4.9, 5.2, 6.1, 4.8, 5.9)
+#' result <- choose_stat_test(data1, data2, paired = FALSE)
+#' print(result)
 #' @export
-choose_stat_test = function(data1, data2 = NULL, paired = FALSE, sigma_known = FALSE) {
-  
-  # Perform Shapiro-Wilk test for normality
-  shapiro_data1 = shapiro.test(data1)$p.value
-  normality_data1 = ifelse(shapiro_data1 > 0.05, TRUE, FALSE)
-  
-  if (!is.null(data2)) {
-    shapiro_data2 = shapiro.test(data2)$p.value
-    normality_data2 = ifelse(shapiro_data2 > 0.05, TRUE, FALSE)
-  }
-  
-  # If the data is normally distributed
-  if (normality_data1 == TRUE & (is.null(data2) || normality_data2 == TRUE)) {
-    
-    # One-sample case
-    if (is.null(data2)) {
-      if (sigma_known == TRUE) {
-        return("Z-test for one sample")
-      } else {
-        return("One-sample T-test")
-      }
+choose_stat_test = function(data1, data2 = NULL, paired = FALSE) {
+  if (is.null(data2)) {
+    # One-sample or single vector case
+    shapiro_test = shapiro.test(data1)
+    normal = shapiro_test$p.value > 0.05
+
+    if (normal) {
+      # Data is normally distributed
+      return(list(test = "One-sample t-test", result = t.test(data1, mu = 0)))
+    } else {
+      # Data is not normally distributed
+      return(list(test = "Wilcoxon signed-rank test", result = wilcox.test(data1, mu = 0)))
     }
-    
+  } else {
     # Two-sample case
-    else {
-      if (paired == TRUE) {
-        return("Paired T-test")
+    shapiro_test1 = shapiro.test(data1)
+    shapiro_test2 = shapiro.test(data2)
+    normal1 = shapiro_test1$p.value > 0.05
+    normal2 = shapiro_test2$p.value > 0.05
+
+    if (normal1 && normal2) {
+      # Both datasets are normally distributed
+      var_test = var.test(data1, data2)
+      equal_var = var_test$p.value > 0.05
+
+      if (paired) {
+        return(list(test = "Paired t-test", result = t.test(data1, data2, paired = TRUE)))
       } else {
-        # Check variance equality using Flinger-Killeen or similar (Levene's or Bartlett's)
-        var_test = var.test(data1, data2)$p.value
-        equal_variance = ifelse(var_test > 0.05, TRUE, FALSE)
-        
-        if (equal_variance == TRUE) {
-          return("Pooled variance T-test")
+        if (equal_var) {
+          return(list(test = "Two-sample t-test", result = t.test(data1, data2, var.equal = TRUE)))
         } else {
-          return("Welch's T-test")
+          return(list(test = "Welch's t-test", result = t.test(data1, data2, var.equal = FALSE)))
         }
       }
-    }
-    
-  } else {
-    
-    # If the data is not normally distributed
-    if (is.null(data2)) {
-      return("One-sample Wilcoxon test")
     } else {
-      if (paired == TRUE) {
-        return("Wilcoxon Signed Rank Test")
+      # At least one dataset is not normally distributed
+      if (paired) {
+        return(list(test = "Wilcoxon signed-rank test", result = wilcox.test(data1, data2, paired = TRUE)))
       } else {
-        return("Mann-Whitney U Test / Wilcoxon Rank Sum Test")
+        return(list(test = "Mann-Whitney U test", result = wilcox.test(data1, data2)))
       }
     }
   }
