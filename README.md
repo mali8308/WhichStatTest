@@ -71,7 +71,3 @@ This package is licensed under the MIT License.
 ## References 📚
 
 Aho, K. A. (2013). _Foundational and applied statistics for biologists using R_. CRC Press.
-
-## Acknowledgments 🙏
-
-Special thanks to all contributors, and to the R community for their continuous support and inspiration!
