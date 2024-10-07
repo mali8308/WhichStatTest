@@ -11,7 +11,36 @@
 #' print(result)
 #' @export
 choose_stat_test = function(data1, data2 = NULL, paired = FALSE) {
+
+  # Check if paired is logical
+  if (!is.logical(paired)) {
+    stop("Error: paired should be a logical value.")
+  }
+
+  #Check if data1 is in the correct format. If not try to convert and throw a warning
+  if (!is.numeric(data1)) {
+    data1_converted = as.numeric(data1)
+    if (any(is.na(data1_converted))) {
+      stop("Error: data1 should be a numeric vector.")
+    } else {
+      warning("Warning: data1 has been converted to numeric.")
+      data1 = data1_converted
+    }
+  }
+
+  #Check if data2 is in the correct format. If not try to convert and throw a warning
+  if (!is.numeric(data2) && !is.null(data2)) {
+    data2_converted = as.numeric(data2)
+    if (any(is.na(data2_converted))) {
+      stop("Error: data2 should be a numeric vector.")
+    } else {
+      warning("Warning: data2 has been converted to numeric.")
+      data2 = data2_converted
+    }
+  }
+
   if (is.null(data2)) {
+
     # One-sample or single vector case
     shapiro_test = shapiro.test(data1)
     normal = shapiro_test$p.value > 0.05
@@ -24,6 +53,7 @@ choose_stat_test = function(data1, data2 = NULL, paired = FALSE) {
       return(list(test = "Wilcoxon signed-rank test", result = wilcox.test(data1, mu = 0)))
     }
   } else {
+
     # Two-sample case
     shapiro_test1 = shapiro.test(data1)
     shapiro_test2 = shapiro.test(data2)
