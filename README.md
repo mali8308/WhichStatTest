@@ -52,7 +52,7 @@ The choose_stat_test function follows this decision flow:
 
 1. **Normality Check**: Conducts a Shapiro-Wilk test to determine if data follows a normal distribution.
 2. **Variance Check**: If the data is normally distributed, Levene's test is performed to check for equal variances.
-3. **Test Recommendation**: Based on the results, the function recommends the most appropriate test (e.g., t-test, Wilcoxon test, ANOVA, Kruskal-Wallis).
+3. **Test Recommendation**: Based on the results, the function recommends the most appropriate test (e.g., t-test, Wilcoxon test, Kruskal-Wallis).
 
 ## Contributing 🤝
 
